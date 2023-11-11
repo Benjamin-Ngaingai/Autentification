@@ -1,4 +1,3 @@
-from temp import Enregistrement
 import hashlib
 import re
 import matplotlib.pyplot as plt
@@ -52,7 +51,6 @@ def menuA():
     
 def menuC():
     import csv
-    print("voici votre menu c ")
     choi=input("Entrez A pour afficher le dataset sous forme de dictionnaire et B pour afficher les courbes")
     if choi=="A":
         with open("2_james_harden_shot_chart_2023.csv",newline="") as csvfile:
@@ -72,7 +70,7 @@ def menuC():
         
     
 def Menu():
-    print("A-donner un mot a haché\n\t Haché le mot par sha256\n\t attaquer par dictionnaire le mot inséré\n\t revenir au menu\n\t B- décalage par cesar\n\t a-donnez un mot a chiffer\n\t cesar dans les 26 lettres\n\t b-chiffrer le message(a)\n\t c-déchiffrer le message(b)\n\t d-revenir au menu principal\n\t")
+    print("A-donner un mot a haché\n\t Haché le mot par sha256\n\t attaquer par dictionnaire le mot inséré\n\t revenir au menu\n B- décalage par cesar\n\t a-donnez un mot a chiffer\n\t cesar dans les 26 lettres\n\t b-chiffrer le message(a)\n\t c-déchiffrer le message(b)\n\t d-revenir au menu principal\nC-Dataset\n\ta-afficher le dataset sous forme de dictionnaire\n\tb-Afficher les courbes de votre choix")
     lettre=input("Entrez A , B ou C ")
     if lettre=="B":
         cesar()
@@ -194,7 +192,7 @@ def mdp():
                 print("il manque un caractere minuscule et un caractere majuscue")
             elif var_punctuation=="True" and var_lower=="True" and var_upper=="True" and var_digits=="True":
                 print("mot de passe","passwordn","acccepté")
-                enregistrement(email,passwordn)
+                enregistrement(passwordn,email)
                 break
             
                 
@@ -202,15 +200,32 @@ def mdp():
             print("entrez un mot de passe d'une longueur 8 caractere")
     else:
         print("merci d'introduire un choix valide")
-credentials={"pirates1": "azerty1","pirates2": "azerty2"}
-def authenticate(username,passwordn):
+
+
+#on initialise le credential
+dict_credential={}
+with open("benji.txt",'r') as fichier:
+    l1=[]
+    for ligne in fichier:
+        a=list(ligne)
+        p="".join(a)
+        p1=p.split()
+        l1.append(p1)
+        
     
-    if username in credentials and credentials[username]==passwordn:
+for i in l1:
+    dict_credential[i[0]]=i[1]
+
+
+def authenticate(username,hashed_string):
+    
+    if username in dict_credential and dict_credential[username]==hashed_string:
         return True
     else:
         return False
     
 def tdbut():
+    global email
     print("Enregistrement:")
     while True: 
         email=input("entrez_votre_email:")
@@ -224,7 +239,7 @@ def debut():
     passwordn=input("mot de passe")
     a_string=passwordn
     hashed_string=hashlib.sha256(a_string.encode('utf-8')).hexdigest()
-    if authenticate(username, passwordn):
+    if authenticate(username, hashed_string):
         print("Authentification reussie.")
         Menu()
     else:
